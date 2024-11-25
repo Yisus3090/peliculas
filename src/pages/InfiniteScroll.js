@@ -7,8 +7,7 @@ function InfiniteScroll() {
   const [movieList, setMovieList] = useState([]);
   const [page, setPage] = useState(1); 
   const [loading, setLoading] = useState(false);
-
-
+const X_API_KEY = 'eab77e65d7372189aef6b3d908d383f8 '
   const fetchMovies = async () => {
     if (loading) return; 
     setLoading(true);
@@ -16,8 +15,10 @@ function InfiniteScroll() {
       const response = await axios.get(
         `https://api.themoviedb.org/3/configuration`,
         {
+            headers: {
+                'Authorization': `Bearer ${X_API_KEY}`,
+              },
           params: {
-            api_key: "TU_API_KEY",
             page: page,
           },
         }
