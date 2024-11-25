@@ -7,26 +7,30 @@ function InfiniteScroll() {
   const [movieList, setMovieList] = useState([]);
   const [page, setPage] = useState(1); 
   const [loading, setLoading] = useState(false);
-const X_API_KEY = 'eab77e65d7372189aef6b3d908d383f8 '
+  const X_API_KEY = 'eab77e65d7372189aef6b3d908d383f8';
+
   const fetchMovies = async () => {
-    if (loading) return; 
+    if (loading) return;
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://api.themoviedb.org/3/configuration`,
+        `https://api.themoviedb.org/3/movie/popular`,  
         {
-            headers: {
-                'Authorization': `Bearer ${X_API_KEY}`,
-              },
           params: {
+            api_key: X_API_KEY,
             page: page,
           },
         }
       );
+
+
       const newMovies = response.data.results.map((movie) => ({
         id: movie.id,
         title: movie.title,
-        image: `https://image.tmdb.org/t/p/w200${movie.poster_path}`,
+
+        image: movie.poster_path
+          ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+          : "https://via.placeholder.com/200x300",  
         liked: false,
       }));
 
@@ -38,16 +42,16 @@ const X_API_KEY = 'eab77e65d7372189aef6b3d908d383f8 '
     setLoading(false);
   };
 
-  // Cargar datos iniciales
+
   useEffect(() => {
     fetchMovies();
   }, []);
 
-  // Manejar el scroll horizontal
+ 
   const handleScroll = (e) => {
     const { scrollLeft, scrollWidth, clientWidth } = e.target;
     if (scrollLeft + clientWidth >= scrollWidth - 10 && !loading) {
-      fetchMovies(); // Cargar más datos
+      fetchMovies(); 
     }
   };
 
